@@ -1,5 +1,13 @@
 # -*- coding: utf-8 -*-
 
+'''
+scikit-learn 예제
+
+scikit-learn이란?
+- machine learning 패키지
+- classification, regression, clustering을 모두 지원
+'''
+
 from sklearn import datasets, svm
 import pandas as pd
 import numpy as np
