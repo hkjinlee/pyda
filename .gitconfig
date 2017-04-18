@@ -1,0 +1,2 @@
+[filter "exclude_recent_files"]
+	clean = grep -v 'recent_files'
