@@ -15,16 +15,8 @@
 - Shift+Enter로 한꺼번에 실행
 
 ## 패키지 설치: IPython 내에서 pip 이용
+- 아래와 같이 IPython 콘솔에서 !pip install [패키지이름]
 ```
-Python 3.6.0 |Anaconda custom (x86_64)| (default, Dec 23 2016, 13:19:00)
-Type "copyright", "credits" or "license" for more information.
-
-IPython 5.1.0 -- An enhanced Interactive Python.
-?         -> Introduction and overview of IPython's features.
-%quickref -> Quick reference.
-help      -> Python's own help system.
-object?   -> Details about 'object', use 'object??' for extra details.
-
 !pip install scrapy
 Collecting scrapy
   Using cached Scrapy-1.3.3-py2.py3-none-any.whl
@@ -53,7 +45,6 @@ Requirement already satisfied: pycparser in /Users/hkjinlee/anaconda3/lib/python
 Installing collected packages: scrapy
 Successfully installed scrapy-1.3.3
 ```
-- IPython 콘솔에서 !pip install [패키지이름]
 
 ## 핫키(shortcut)
 ### 창 이동
