@@ -13,7 +13,7 @@ scikit-learn이란?
 !conda install -y scikit-learn
 '''
 
-from sklearn import datasets, svm
+from sklearn import datasets, svm, tree
 import pandas as pd
 import numpy as np
 
@@ -22,10 +22,11 @@ import numpy as np
 iris 데이터셋: 총 150개, 4개 컬럼
 '''
 iris = pd.read_csv('data/iris.csv')
-iris.data = iris[range(0,4)].values
-iris.data.shape
-iris.target = iris["type"].astype('category').values.codes
-iris.target.shape
+iris_data = iris[range(0,4)].values
+iris_data.shape
+iris_type = iris["type"].astype('category').values
+iris_target = iris_type.codes
+iris_target.shape
 
 #%%
 '''
@@ -34,10 +35,10 @@ SVM 학습
 - 총 150개 가운데 142개에 대해 정확한 값이 나옴
 '''
 clf = svm.SVC(gamma=0.0001, C=100.)
-clf.fit(iris.data, iris.target)
+clf.fit(iris_data, iris_target)
 
-pred = clf.predict(iris.data)
-sum(iris.target == pred)
+pred = clf.predict(iris_data)
+sum(iris_target == pred)
 
 #%%
 '''
@@ -48,7 +49,7 @@ from sklearn.model_selection import train_test_split
 
 data, target = {}, {}
 data['train'], data['test'], target['train'], target['test'] = \
-     train_test_split(iris.data, iris.target, test_size=.2)
+     train_test_split(iris_data, iris_target, test_size=.2)
 clf.fit(data['train'], target['train'])
 
 pred = clf.predict(data['train'])
@@ -56,3 +57,32 @@ print(sum(target['train'] == pred) / target['train'].shape[0])
 
 pred = clf.predict(data['test'])
 print(sum(target['test'] == pred) / target['test'].shape[0])
+
+#%%
+'''
+CART(Classification and Regression Tree) 학습
+'''
+clf = tree.DecisionTreeClassifier()
+clf.fit(data['train'], target['train'])
+
+pred = clf.predict(data['train'])
+print(sum(target['train'] == pred) / target['train'].shape[0])
+
+pred = clf.predict(data['test'])
+print(sum(target['test'] == pred) / target['test'].shape[0])
+
+#%%
+'''
+트리 시각화
+
+!conda install -c conda-forge -y pydotplus
+!conda install -y graphviz
+'''
+import pydotplus
+from IPython.display import Image
+
+tree_dot = tree.export_graphviz(clf, out_file=None,
+                                feature_names=iris.columns.values,
+                                class_names=iris_type.categories.values)
+tree_graph = pydotplus.graph_from_dot_data(tree_dot)
+Image(tree_graph.create_png())

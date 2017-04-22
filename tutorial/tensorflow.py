@@ -87,3 +87,8 @@ with tf.Session() as sess:
   sess.run(tf.global_variables_initializer())
   print(sess.run(y, feed_dict={a: 2, b: 100}))
   
+#%%
+'''
+간단한 머신러닝
+'''
+iris = pd.read_csv('data/iris.csv')
