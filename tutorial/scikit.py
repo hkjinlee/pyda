@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from __future__ import absolute_import
+from __future__ import division
 
 '''
 scikit-learn 예제
@@ -6,20 +8,26 @@ scikit-learn 예제
 scikit-learn이란?
 - machine learning 패키지
 - classification, regression, clustering을 모두 지원
+
+패키지 설치
+!conda install -y scikit-learn
 '''
 
 from sklearn import datasets, svm
 import pandas as pd
 import numpy as np
 
+#%%
 '''
 iris 데이터셋: 총 150개, 4개 컬럼
 '''
-iris = datasets.load_iris()
-iris.data
+iris = pd.read_csv('data/iris.csv')
+iris.data = iris[range(0,4)].values
 iris.data.shape
+iris.target = iris["type"].astype('category').values.codes
 iris.target.shape
 
+#%%
 '''
 SVM 학습
 - gamma와 C는 임의의 값임.
@@ -31,6 +39,7 @@ clf.fit(iris.data, iris.target)
 pred = clf.predict(iris.data)
 sum(iris.target == pred)
 
+#%%
 '''
 위의 결과는 training set을 그대로 test set으로 사용한 결과. (일종의 cheating)
 training set과 test set을 8:2로 분할하여 다시 훈련
@@ -43,7 +52,7 @@ data['train'], data['test'], target['train'], target['test'] = \
 clf.fit(data['train'], target['train'])
 
 pred = clf.predict(data['train'])
-sum(target['train'] == pred) / target['train'].shape
+print(sum(target['train'] == pred) / target['train'].shape[0])
 
 pred = clf.predict(data['test'])
-sum(target['test'] == pred) / target['test'].shape
+print(sum(target['test'] == pred) / target['test'].shape[0])
