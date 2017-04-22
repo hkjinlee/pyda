@@ -12,6 +12,7 @@ Tensorflow 튜토리얼
 '''
 
 from __future__ import absolute_import
+from __future__ import print_function
 
 import tensorflow as tf
 import pandas as pd
@@ -89,6 +90,43 @@ with tf.Session() as sess:
   
 #%%
 '''
-간단한 머신러닝
+tf.contrib.learn을 이용한 간단한 머신러닝 classifier 실습
+
+- 원래 skflow라는 scikit-learn 스타일의 3rd party 모듈을 tensorflow로 합병
+- 먼저 tutorial/sklearn.py를 보고 오는 편이 좋음
+- 선형분류기(LinearClassifier)와 딥러닝(DNNClassifier)를 이용하여 iris 데이터 분류
 '''
+from sklearn.model_selection import train_test_split
+
+def get_x(iris):
+  return iris.iloc[:, 0:4].values
+
+def get_y(iris):
+  return iris['type'].values.codes.astype('int32')
+
+def fit_and_evaluate(clf):    
+  clf.fit(x=get_x(iris_train), y=get_y(iris_train), steps=100)
+  return clf.evaluate(x=get_x(iris_test), y=get_y(iris_test), steps=1)['accuracy']
+
 iris = pd.read_csv('data/iris.csv')
+iris['type'] = iris['type'].astype('category')
+
+iris_train, iris_test = train_test_split(iris)
+
+feature_cols = tf.contrib.learn.infer_real_valued_columns_from_input(
+    iris_train.iloc[:, 0:4])
+
+clf_linear = tf.contrib.learn.LinearClassifier(
+    feature_columns=feature_cols, n_classes=iris['type'].nunique())
+clf_dnn = tf.contrib.learn.DNNClassifier(
+    feature_columns=feature_cols, n_classes=iris['type'].nunique(),
+    hidden_units=[10, 20, 10])
+
+accuracies = [ fit_and_evaluate(clf) for clf in [clf_linear, clf_dnn]]
+print('Accracy: linear = {:.2f}, DNN = {:.2f}'.format(*accuracies))
+
+#%%
+'''
+
+'''
+
