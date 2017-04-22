@@ -22,11 +22,7 @@ import numpy as np
 iris 데이터셋: 총 150개, 4개 컬럼
 '''
 iris = pd.read_csv('data/iris.csv')
-iris_data = iris[range(0,4)].values
-iris_data.shape
-iris_type = iris["type"].astype('category').values
-iris_target = iris_type.codes
-iris_target.shape
+iris['type_n'] = iris['type'].astype('category').values.codes
 
 #%%
 '''
@@ -35,10 +31,10 @@ SVM 학습
 - 총 150개 가운데 142개에 대해 정확한 값이 나옴
 '''
 clf = svm.SVC(gamma=0.0001, C=100.)
-clf.fit(iris_data, iris_target)
+clf.fit(iris.iloc[:, 0:4], iris['type_n'])
 
-pred = clf.predict(iris_data)
-sum(iris_target == pred)
+pred = clf.predict(iris.iloc[:, 0:4])
+sum(iris['type_n'] == pred)
 
 #%%
 '''
@@ -47,29 +43,28 @@ training set과 test set을 8:2로 분할하여 다시 훈련
 '''
 from sklearn.model_selection import train_test_split
 
-data, target = {}, {}
-data['train'], data['test'], target['train'], target['test'] = \
-     train_test_split(iris_data, iris_target, test_size=.2)
-clf.fit(data['train'], target['train'])
+iris_train, iris_test = train_test_split(iris, test_size=.2)
+     
+clf.fit(iris_train.iloc[:, 0:4], iris_train['type_n'])
 
-pred = clf.predict(data['train'])
-print(sum(target['train'] == pred) / target['train'].shape[0])
+pred = clf.predict(iris_train.iloc[:, 0:4])
+print(sum(iris_train['type_n'] == pred) / iris_train.shape[0])
 
-pred = clf.predict(data['test'])
-print(sum(target['test'] == pred) / target['test'].shape[0])
+pred = clf.predict(iris_test.iloc[:, 0:4])
+print(sum(iris_test['type_n'] == pred) / iris_test.shape[0])
 
 #%%
 '''
 CART(Classification and Regression Tree) 학습
 '''
 clf = tree.DecisionTreeClassifier()
-clf.fit(data['train'], target['train'])
+clf.fit(iris_train.iloc[:, 0:4], iris_train['type_n'])
 
-pred = clf.predict(data['train'])
-print(sum(target['train'] == pred) / target['train'].shape[0])
+pred = clf.predict(iris_train.iloc[:, 0:4])
+print(sum(iris_train['type_n'] == pred) / iris_train.shape[0])
 
-pred = clf.predict(data['test'])
-print(sum(target['test'] == pred) / target['test'].shape[0])
+pred = clf.predict(iris_test.iloc[:, 0:4])
+print(sum(iris_test['type_n'] == pred) / iris_test.shape[0])
 
 #%%
 '''
