@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
 앱애니 API를 이용한 데이터 조회
 
@@ -55,13 +56,10 @@ class AppAnnie():
   '''
   def topGames(self, feeds='grossing', granularity='weekly', date=None, ranks=100):
     url = '{host}/intelligence/{vertical}/{market}/ranking'.format(**self.url_params)
-    params = { **self.params,
-              'feeds': feeds,
-              'granularity': granularity,
-              'ranks': ranks,
-              'start_date': date,
-              'end_date': date
-              }
+    params = dict(self.params, 
+                  feeds=feeds, granularity=granularity, ranks=ranks,
+                  start_date=date, end_date=date,
+                  )
     return self.__api_call(url, params=params, result_key='list')
     
   '''
@@ -70,10 +68,7 @@ class AppAnnie():
   def gameHistory(self, product_id, feeds='revenue', granularity='weekly', **kwargs):
     url = '{host}/intelligence/{vertical}/{market}/app/%s/history'\
       .format(**self.url_params) % product_id
-    params = { **self.params, **kwargs,
-              'feeds': feeds,
-              'granularity': granularity,
-    }
+    params = dict(self.params, feeds=feeds, granularity=granularity, **kwagrs)
     return self.__api_call(url, params=params, result_key='list')
   
   '''
@@ -82,9 +77,7 @@ class AppAnnie():
   def gameFeaturedHistory(self, product_id, **kwargs):
     url = '{host}/{vertical}/{market}/app/%s/featured_history'\
       .format(**self.url_params) % product_id
-    params = { **kwargs,
-              'countries': 'All',
-    }
+    params = dict(countries='All', **kwargs)
     return self.__api_call(url, params=params, result_key='feature_history')
     
 def get_start_end_date(year, month):
